@@ -27,7 +27,7 @@ def main(_config):
                 tokenizer=_config["tokenizer"],
                 max_text_len=_config["max_text_len"],
             )
-            print('Using VQA_val Dataset for KAB-DILS!')
+            print('Using VQA_val Dataset for KAB-APP!')
 
         if _config['datasets'] == ["gqa"]:
             kab_val_dataset = GQADataset(
@@ -38,7 +38,7 @@ def main(_config):
                 tokenizer=_config["tokenizer"],
                 max_text_len=_config["max_text_len"],
             )
-            print('Using GQA_testdev Dataset for KAB-DILS!')
+            print('Using GQA_testdev Dataset for KAB-APP!')
 
         if _config['datasets'] == ["snli_ve"]:
             kab_val_dataset = SNLIVEDataset(
@@ -49,7 +49,7 @@ def main(_config):
                 tokenizer=_config["tokenizer"],
                 max_text_len=_config["max_text_len"],
             )
-            print('Using SNLI_VE_val Dataset for KAB-DILS!')
+            print('Using SNLI_VE_val Dataset for KAB-APP!')
 
     else:
         kab_val_dataset = None

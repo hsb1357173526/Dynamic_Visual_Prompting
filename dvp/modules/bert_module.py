@@ -135,7 +135,7 @@ class DVP_BERT(pl.LightningModule):
 
             self.search_sample = config['search_sample']
 
-            # Define cross attention layer and token_type_embedding candidates of KAB-DILS
+            # Define cross attention layer and token_type_embedding candidates of KAB-APP
             self.token_type_embeddings_options = nn.ModuleList([nn.Embedding(2, config["hidden_size"])
                                                                 for _ in range(config["num_layers"])])
 
@@ -144,17 +144,17 @@ class DVP_BERT(pl.LightningModule):
                                                                      config["num_heads"])
                                                      for _ in range(config["num_layers"])])
 
-            # For KAB-DILS mini-val
+            # For KAB-APP mini-val
             self.kab_val_dataset = kab_val_dataset
             self.kab_val_iter = None
 
             # Define preference of all possible layers
             self.layer_alphas = nn.Parameter(torch.zeros(config["num_layers"]))
 
-            # Define whether in KAB-DILS samping stage
+            # Define whether in KAB-APP samping stage
             self.kab_update_state = False
 
-            # Information of every KAB-DILS sampling
+            # Information of every KAB-APP sampling
             self.active_index_buffer = []
             self.up_weight_buffer = []
             self.log_probs_buffer = []
@@ -163,11 +163,11 @@ class DVP_BERT(pl.LightningModule):
             self.score_buffer = []
             self.reward_buffer = []
 
-            # Frequency of printing KAB-DILS searched result
+            # Frequency of printing KAB-APP searched result
             self.kab_print_info = 0
 
         else:
-            # Use KAB-DILS searched result to insert DVP for adapting V&L tasks
+            # Use KAB-APP searched result to insert DVP for adapting V&L tasks
             self.token_type_embeddings = nn.Embedding(2, config["hidden_size"])
             self.cross_attn = Cross_Attention(config["hidden_size"],config["drop_rate"],config["num_heads"])
             self.insert_layer = config['insert_layer']
@@ -270,11 +270,11 @@ class DVP_BERT(pl.LightningModule):
 
             if self.search_stage:
 
-                # KAB-DILS randomly choose a insertion layer to train
+                # KAB-APP randomly choose a insertion layer to train
                 if not self.kab_update_state:
                     insert_layer = random.randint(0, len(self.layer_alphas) - 1)
 
-                # KAB-DILS choose some layers based on perferences in sampling stage
+                # KAB-APP choose some layers based on perferences in sampling stage
                 else:
                     probs = F.softmax(self.layer_alphas, dim=0)
                     insert_layer = torch.multinomial(probs.data, 1)[0].item()
@@ -302,7 +302,7 @@ class DVP_BERT(pl.LightningModule):
                     text_cls_token = encoder_outputs[:, :1, :]
 
                     if self.search_stage:
-                        # KAB-DILS use corresponding cross attention layer candidates of sampled result to generate DVP
+                        # KAB-APP use corresponding cross attention layer candidates of sampled result to generate DVP
                         visual_prompt = self.cross_attn_options[i](x, x, text_cls_token, None)
 
                         encoder_outputs, visual_prompt = (encoder_outputs + self.token_type_embeddings_options[i](torch.zeros_like(text_input_ids, device=text_input_ids.device).long()),
@@ -481,7 +481,7 @@ class DVP_BERT(pl.LightningModule):
 
     def kab_update_step(self):
 
-        # Load KAB-DILS mini-val dataloader
+        # Load KAB-APP mini-val dataloader
         if self.kab_val_iter is None:
             val_sampler = DistributedSampler(self.kab_val_dataset, shuffle=True)
             self.kab_val_loader = DataLoader(
@@ -556,7 +556,7 @@ class DVP_BERT(pl.LightningModule):
 
         optimizer.step(closure=optimizer_closure)
 
-        # If search stage is True, we will start KAB-DILS sampling after randomly sampling for training
+        # If search stage is True, we will start KAB-APP sampling after randomly sampling for training
         if self.search_stage:
             # While sampling, the state is set to True
             self.kab_update_state = True
@@ -564,7 +564,7 @@ class DVP_BERT(pl.LightningModule):
             # Sampling and updating preference
             ave_ce_loss, ave_score, ave_arch_loss, max_reward = self.kab_update_step()
 
-            # Print info of KAB-DILS
+            # Print info of KAB-APP
             self.kab_print_info += 1
             if self.kab_print_info % 100 == 0 and self.kab_print_info != 0:
                 print('Architecture [%d-%d]\t Arch Loss %.4f\t CE Loss %.4f\t Ave Score %.4f\t Max Reward %.4f\t' %(epoch, batch_idx, used_time, ave_arch_loss, ave_ce_loss, ave_score, max_reward))

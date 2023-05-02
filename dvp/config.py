@@ -67,7 +67,7 @@ def config():
     num_workers = 8
     precision = 16
 
-    # KAB-DILS
+    # KAB-APP
     search_sample = 5
     search_stage = False
     use_adapter = False
