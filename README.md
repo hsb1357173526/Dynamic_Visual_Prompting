@@ -1,5 +1,6 @@
 # Dynamic Visual Prompting
 
+![avatar](./method.png)
 ---
 
 ## Environment Setup
