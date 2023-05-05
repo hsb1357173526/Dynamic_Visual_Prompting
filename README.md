@@ -37,7 +37,7 @@ CUDA_VISIBLE_DEVICES=0 python run.py with data_root=./datasets num_gpus=1 num_no
 ```
 * <font color='red'>**Note**</font>: For different PLMs or VL tasks, KAB-APP will finally print out the searched DVP placement `K`, and you need to record `K` for subsequent training.
 
-
+* Since we override `optimizer_step()`, `batch_size` needs to be consistent with `per_gpu_batchsize`.
 
 ## Finetuning
 ```bash
