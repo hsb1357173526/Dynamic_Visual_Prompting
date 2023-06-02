@@ -1,6 +1,5 @@
 # Dataset Preparation
 
----
 * We utilize three datsets: Visual Question Answering v2 (VQAv2), Grounding Question Answering (GQA), Stanford Natural Language Inference - Visual Entailment (SNLI-VE).
 * We will provide download url, please download the datasets by yourself.
 * We use `pyarrow` to serialize the datasets, conversion scripts are located in `dvp/utils/write_*.py`.
@@ -39,7 +38,7 @@ make_arrow('./datasets','./datasets')
 * Download url: https://cs.stanford.edu/people/dorarad/gqa/download.html.
 * Download [GQA questions](https://downloads.cs.stanford.edu/nlp/data/gqa/questions1.2.zip) and [GQA images](https://downloads.cs.stanford.edu/nlp/data/gqa/images.zip).
 
-
+```
     ./datasets
     ├── images          
     │   ├── 1.jpg                  
@@ -48,7 +47,7 @@ make_arrow('./datasets','./datasets')
     ├── train_balanced_questions.json
     ├── train_balanced_questions.json
     └── testdev_balanced_questions.json
-
+```
 
 ```python
 from dvp.utils.write_gqa import make_arrow
@@ -59,11 +58,12 @@ make_arrow('./datasets', './datasets')
 * Download url: https://ofa-beijing.oss-cn-beijing.aliyuncs.com/datasets/snli_ve_data/snli_ve_data.zip.
 * Follow by [OFA repository](https://github.com/OFA-Sys/OFA/blob/main/datasets.md), we use its ```.tsv``` format of SNLI-VE.
 
-
+```
     ./datasets
     ├── snli_ve_train.tsv
     ├── snli_ve_dev.tsv
     └── snli_ve_test.tsv
+```
 
 ```python
 from dvp.utils.write_snli_ve import make_arrow
