@@ -11,7 +11,7 @@
 * Download url: https://visualqa.org/download.html.
 * Download COCO [2014 train images](http://images.cocodataset.org/zips/train2014.zip), [2014 val images](http://images.cocodataset.org/zips/val2014.zip), [2015 test images](http://images.cocodataset.org/zips/test2015.zip), annotations ([train](https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/v2_Annotations_Train_mscoco.zip), [val](https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/v2_Annotations_Val_mscoco.zip)), and questions ([train](https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/v2_Questions_Train_mscoco.zip), [val](https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/v2_Questions_Val_mscoco.zip), [test](https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/v2_Questions_Test_mscoco.zip)).
 
-
+```
     ./datasets
     ├── train2014            
     │   ├── COCO_train2014_000000000009.jpg                
@@ -28,6 +28,7 @@
     ├── v2_OpenEnded_mscoco_test-dev2015_questions.json
     ├── v2_mscoco_train2014_annotations.json
     └── v2_mscoco_val2014_annotations.json
+```
 
 ```python
 from dvp.utils.write_vqa import make_arrow
