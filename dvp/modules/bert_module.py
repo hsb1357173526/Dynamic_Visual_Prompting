@@ -567,7 +567,7 @@ class DVP_BERT(pl.LightningModule):
             # Print info of KAB-APP
             self.kab_print_info += 1
             if self.kab_print_info % 100 == 0 and self.kab_print_info != 0:
-                print('Architecture [%d-%d]\t Arch Loss %.4f\t CE Loss %.4f\t Ave Score %.4f\t Max Reward %.4f\t' %(epoch, batch_idx, used_time, ave_arch_loss, ave_ce_loss, ave_score, max_reward))
+                print('Architecture [%d-%d]\t Arch Loss %.4f\t CE Loss %.4f\t Ave Score %.4f\t Max Reward %.4f\t' %(epoch, batch_idx, ave_arch_loss, ave_ce_loss, ave_score, max_reward))
                 print('%s' % (self.get_name()))
                 self.kab_print_info = 0
 
