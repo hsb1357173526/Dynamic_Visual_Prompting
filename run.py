@@ -3,7 +3,7 @@ import copy
 import pytorch_lightning as pl
 
 from dvp.config import ex
-from dvp.modules import DVP_BERT,DVP_T5
+from dvp.modules import DVP_BERT,DVP_T5,DVP_LLAMA
 from dvp.datamodules.multitask_datamodule import MTDataModule
 import torch.distributed as dist
 from dvp.datasets import VQAv2Dataset
@@ -58,6 +58,9 @@ def main(_config):
         model = DVP_BERT(_config, kab_val_dataset)
     elif _config['language_model'] == 'T5':
         model = DVP_T5(_config, kab_val_dataset)
+    elif _config['language_model'] == 'LLAMA':
+        model = DVP_LLAMA(_config, kab_val_dataset)
+
 
     exp_name = f'{_config["exp_name"]}'
 

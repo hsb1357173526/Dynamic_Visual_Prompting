@@ -140,14 +140,20 @@ def set_schedule(pl_module):
         "norm1.weight",
         "norm2.bias",
         "norm2.weight",
+        'layernorm.weight',
+        "layernorm.bias",
     ]
     head_names = ["vqa_classifier","gqa_classifier","snli_ve_classifier"]
+
+
     lr_mult = pl_module.hparams.config["lr_mult"]
     end_lr = pl_module.hparams.config["end_lr"]
     decay_power = pl_module.hparams.config["decay_power"]
     optim_type = pl_module.hparams.config["optim_type"]
 
     names = [n for n, p in pl_module.named_parameters()]
+
+
     optimizer_grouped_parameters = [
         {
             "params": [
@@ -189,6 +195,7 @@ def set_schedule(pl_module):
             "lr": lr * lr_mult,
         },
     ]
+
 
     if optim_type == "adamw":
         optimizer = AdamW(

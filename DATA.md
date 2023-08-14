@@ -1,10 +1,26 @@
 # Dataset Preparation
 
-* We utilize three datsets: Visual Question Answering v2 (VQAv2), Grounding Question Answering (GQA), Stanford Natural Language Inference - Visual Entailment (SNLI-VE).
+* We utilize three datsets: [Visual Question Answering v2](https://visualqa.org/) (VQAv2), [Grounding Question Answering](https://cs.stanford.edu/people/dorarad/gqa/about.html) (GQA), [Stanford Natural Language Inference - Visual Entailment](https://github.com/necla-ml/SNLI-VE) (SNLI-VE).
 * We will provide download url, please download the datasets by yourself.
 * We use `pyarrow` to serialize the datasets, conversion scripts are located in `dvp/utils/write_*.py`.
 * Please organize the datasets as follows and run `make_arrow` functions to convert the dataset to pyarrow binary file.
+* After below operations, the dataset structure should include these `.arrow` file:
 
+```
+    ./datasets
+    ├── vqav2_train.arrow
+    ├── vqav2_trainable_val.arrow
+    ├── vqav2_val.arrow
+    ├── vqav2_rest_val.arrow
+    ├── vqav2_test-dev.arrow
+    ├── vqav2_test.arrow 
+    ├── gqa_train.arrow
+    ├── gqa_test-dev.arrow
+    ├── snli_ve_train.arrow 
+    ├── snli_ve_dev.arrow
+    ├── snli_ve_test.arrow 
+    └── ...
+```
 
 ## VQAv2
 * Download url: https://visualqa.org/download.html.

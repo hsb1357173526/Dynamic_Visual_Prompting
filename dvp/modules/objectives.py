@@ -29,6 +29,8 @@ def compute_snli_ve(pl_module, batch):
         snli_ve_logits = pl_module.snli_ve_classifier(infer["cls_feats"])
     elif pl_module.model_name == 'T5':
         snli_ve_logits = pl_module.snli_ve_classifier(infer["decoder_feats"])
+    elif pl_module.model_name == 'LLAMA':
+        snli_ve_logits = pl_module.snli_ve_classifier(infer["classify_hidden_states"])
     else:
         raise NotImplementedError("error in forwarding")
 
@@ -96,6 +98,8 @@ def compute_gqa(pl_module, batch):
         gqa_logits = pl_module.gqa_classifier(infer["cls_feats"])
     elif pl_module.model_name == 'T5':
         gqa_logits = pl_module.gqa_classifier(infer["decoder_feats"])
+    elif pl_module.model_name == 'LLAMA':
+        gqa_logits = pl_module.gqa_classifier(infer["classify_hidden_states"])
     else:
         raise NotImplementedError("error in forwarding")
 
@@ -156,6 +160,8 @@ def compute_vqa(pl_module, batch):
         vqa_logits = pl_module.vqa_classifier(infer["cls_feats"])
     elif pl_module.model_name == 'T5':
         vqa_logits = pl_module.vqa_classifier(infer["decoder_feats"])
+    elif pl_module.model_name == 'LLAMA':
+        vqa_logits = pl_module.vqa_classifier(infer["classify_hidden_states"])
     else:
         raise NotImplementedError("error in forwarding")
 

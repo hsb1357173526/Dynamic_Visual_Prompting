@@ -6,7 +6,7 @@ import os
 
 from PIL import Image
 from dvp.transforms import keys_to_transforms
-from transformers import BertTokenizer, T5Tokenizer
+from transformers import BertTokenizer, T5Tokenizer, LlamaTokenizer
 
 class BaseDataset(torch.utils.data.Dataset):
     def __init__(
@@ -38,6 +38,13 @@ class BaseDataset(torch.utils.data.Dataset):
         elif 't5' in tokenizer:
             self.tokenizer = T5Tokenizer.from_pretrained(tokenizer, do_lower_case=False)
             self.use_model = 't5'
+
+        elif 'llama' in tokenizer:
+            self.tokenizer = LlamaTokenizer.from_pretrained(tokenizer)
+            # self.tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+            self.tokenizer.pad_token = '[PAD]'
+            self.use_model = 'llama'
+
 
         else:
             raise NotImplementedError("no found tokenizer")
@@ -111,17 +118,26 @@ class BaseDataset(torch.utils.data.Dataset):
         index, caption_index = self.index_mapper[raw_index]
 
         text = self.all_texts[index][caption_index]
-        text_encoding = self.tokenizer(text,
-                                       padding="max_length",
-                                       truncation=True,
-                                       max_length=self.max_text_len)
+        if  self.use_model == 'llama':
+            text = text + '</s>'
+            return {
+                "text": text,
+                "img_index": index,
+                "cap_index": caption_index,
+                "raw_index": raw_index,
+            }
+        else:
+            text_encoding = self.tokenizer(text,
+                                           padding="max_length",
+                                           truncation=True,
+                                           max_length=self.max_text_len)
 
-        return {
-            "text": (text,text_encoding),
-            "img_index": index,
-            "cap_index": caption_index,
-            "raw_index": raw_index,
-        }
+            return {
+                "text": (text,text_encoding),
+                "img_index": index,
+                "cap_index": caption_index,
+                "raw_index": raw_index,
+            }
 
 
     def collate(self, batch):
@@ -137,20 +153,28 @@ class BaseDataset(torch.utils.data.Dataset):
                 new_images[i] = dict_batch[img_key][i][0]
             dict_batch[img_key] = new_images
 
-        text_input_ids = torch.zeros(batch_size, self.max_text_len).long()
-        text_attention_mask = torch.zeros(batch_size, self.max_text_len)
-        for i in range(batch_size):
-            text_input_ids[i] = torch.LongTensor(dict_batch['text'][i][1]['input_ids'])
-            text_attention_mask[i] = torch.LongTensor(dict_batch['text'][i][1]['attention_mask'])
-        dict_batch['text_input_ids'] = text_input_ids
-        dict_batch['text_attention_mask'] = text_attention_mask
+        if self.use_model == 'llama':
+            texts_encoding = self.tokenizer(dict_batch['text'],padding=True,return_tensors='pt')
+            text_input_ids = texts_encoding['input_ids'].long()
+            text_attention_mask = texts_encoding['attention_mask'].long()
+            dict_batch['text_input_ids'] = text_input_ids
+            dict_batch['text_attention_mask'] = text_attention_mask
 
-        if self.use_model == 'bert':
-            text_token_type_ids = torch.zeros(batch_size, self.max_text_len).long()
+        else:
+            text_input_ids = torch.zeros(batch_size, self.max_text_len).long()
+            text_attention_mask = torch.zeros(batch_size, self.max_text_len)
             for i in range(batch_size):
-                text_token_type_ids[i] = torch.LongTensor(dict_batch['text'][i][1]['token_type_ids'])
-            dict_batch['text_token_type_ids'] = text_token_type_ids
+                text_input_ids[i] = torch.LongTensor(dict_batch['text'][i][1]['input_ids'])
+                text_attention_mask[i] = torch.LongTensor(dict_batch['text'][i][1]['attention_mask'])
+            dict_batch['text_input_ids'] = text_input_ids
+            dict_batch['text_attention_mask'] = text_attention_mask
 
-        dict_batch['text'] = [d[0] for d in dict_batch['text']]
+            if self.use_model == 'bert':
+                text_token_type_ids = torch.zeros(batch_size, self.max_text_len).long()
+                for i in range(batch_size):
+                    text_token_type_ids[i] = torch.LongTensor(dict_batch['text'][i][1]['token_type_ids'])
+                dict_batch['text_token_type_ids'] = text_token_type_ids
+
+            dict_batch['text'] = [d[0] for d in dict_batch['text']]
 
         return dict_batch

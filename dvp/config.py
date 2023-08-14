@@ -83,7 +83,6 @@ def env_dandelin():
 
 
 # Named configs for "task" which define datasets, loss_names and desired batch_size, warmup_steps, epochs, and exp_name
-
 @ex.named_config
 def dvp_search_bert_vqa():
     exp_name = "dvp_search_bert_vqa"
@@ -283,3 +282,133 @@ def dvp_adaption_t5_gqa():
     search_stage = False
     use_adapter = False
     tokenizer = "t5-base"
+
+@ex.named_config
+def dvp_search_llama_vqa():
+    exp_name = "dvp_search_llama_vqa"
+    language_model = 'LLAMA'
+    datasets = ["vqa"]
+    loss_names = _loss_names({"vqa": 1})
+    batch_size = 128
+    max_epoch = 2
+    max_steps = None
+    warmup_steps = 0
+    learning_rate = 1e-4
+    search_stage = True
+    decay_power = 'constant'
+    use_adapter = True
+    tokenizer = "./llama_7b_weights_hf"
+    hidden_size = 4096
+    num_heads = 16
+    num_layers = 32
+    drop_rate = 0.1
+    search_sample = 10
+    weight_decay = 0.2
+
+@ex.named_config
+def dvp_adaption_llama_vqa():
+    exp_name = "dvp_adaption_llama_vqa"
+    language_model = 'LLAMA'
+    datasets = ["vqa"]
+    loss_names = _loss_names({"vqa": 1})
+    batch_size = 256
+    max_epoch = 10
+    max_steps = None
+    warmup_steps = 0.1
+    learning_rate = 5e-4
+    insert_layer = 0
+    search_stage = False
+    use_adapter = True
+    tokenizer = "./llama_7b_weights_hf"
+    hidden_size = 4096
+    num_heads = 16
+    num_layers = 32
+    drop_rate = 0.1
+    weight_decay = 0.2
+
+@ex.named_config
+def dvp_search_llama_gqa():
+    exp_name = "dvp_search_llama_gqa"
+    language_model = 'LLAMA'
+    datasets = ["gqa"]
+    loss_names = _loss_names({"gqa": 1})
+    batch_size = 128
+    max_epoch = 2
+    max_steps = None
+    warmup_steps = 0
+    learning_rate = 1e-4
+    search_stage = True
+    decay_power = 'constant'
+    use_adapter = True
+    tokenizer = "./llama_7b_weights_hf"
+    hidden_size = 4096
+    num_heads = 16
+    num_layers = 32
+    drop_rate = 0.1
+    search_sample = 10
+    weight_decay = 0.2
+
+@ex.named_config
+def dvp_adaption_llama_gqa():
+    exp_name = "dvp_adaption_llama_gqa"
+    language_model = 'LLAMA'
+    datasets = ["gqa"]
+    loss_names = _loss_names({"gqa": 1})
+    batch_size = 256
+    max_epoch = 10
+    max_steps = None
+    warmup_steps = 0.1
+    learning_rate = 5e-4
+    insert_layer = 0
+    search_stage = False
+    use_adapter = True
+    tokenizer = "./llama_7b_weights_hf"
+    hidden_size = 4096
+    num_heads = 16
+    num_layers = 32
+    drop_rate = 0.1
+    weight_decay = 0.2
+
+@ex.named_config
+def dvp_search_llama_snli_ve():
+    exp_name = "dvp_search_llama_snli_ve"
+    language_model = 'LLAMA'
+    datasets = ["snli_ve"]
+    loss_names = _loss_names({"snli_ve": 1})
+    batch_size = 64
+    max_epoch = 2
+    max_steps = None
+    warmup_steps = 0
+    learning_rate = 1e-4
+    search_stage = True
+    decay_power = 'constant'
+    use_adapter = True
+    tokenizer = "./llama_7b_weights_hf"
+    hidden_size = 4096
+    num_heads = 16
+    num_layers = 32
+    drop_rate = 0.1
+    search_sample = 10
+    weight_decay = 0.2
+
+@ex.named_config
+def dvp_adaption_llama_snli_ve():
+    exp_name = "dvp_adaption_llama_snli_ve"
+    language_model = 'LLAMA'
+    datasets = ["snli_ve"]
+    loss_names = _loss_names({"snli_ve": 1})
+    batch_size = 128
+    max_epoch = 10
+    max_steps = None
+    warmup_steps = 0.1
+    learning_rate = 5e-4
+    insert_layer = 0
+    search_stage = False
+    use_adapter = True
+    tokenizer = "./llama_7b_weights_hf"
+    hidden_size = 4096
+    num_heads = 16
+    num_layers = 32
+    drop_rate = 0.1
+    weight_decay = 0.2
+
