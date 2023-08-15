@@ -178,3 +178,7 @@ CUDA_VISIBLE_DEVICES=0,1 python run.py with data_root=./datasets num_gpus=2 num_
 
 ### Others
 * For GQA and SNLI-VE, it will save the best metric after every epoches, so we don't need extra evaluation.
+
+
+## LLaMA-DVP<sub>*adp*</sub> for ScienceQA
+* We provide the implementation in `./Dynamic_Visual_Prompting_For_SQA` folder. You can follow [`README.md`](./Dynamic_Visual_Prompting_For_SQA/README.md) to execute.
